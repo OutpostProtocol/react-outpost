@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Image, SafeAreaView } from 'react-native';
 import { useWindowDimensions } from "react-native-use-dimensions";
+import WalletConnect from "react-native-walletconnect";
 
 import Outpost, { useAllCommunities } from "./lib";
-import { CommunityCard } from "./components";
+import { Login, CommunityCard } from "./components";
 
 function CommunityList() {
   const { loading, error, communities } = useAllCommunities();
@@ -28,23 +29,29 @@ export default function App() {
   const { width } = useWindowDimensions();
   const logoSize = width * 0.6;
   return (
-    <Outpost>
-      <ScrollView style={StyleSheet.absoluteFill}>
-        <View style={styles.safeAreaView} />
-        <View style={styles.logoContainer}>
-          <Image
-            style={{
-              width: logoSize,
-              height: logoSize,
-            }}
-            source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
-          />
-          <Text style={styles.title} children="OUTPOST" />
+    <WalletConnect>
+      <Outpost>
+        <ScrollView style={StyleSheet.absoluteFill}>
+          <View style={styles.safeAreaView} />
+          <View style={styles.logoContainer}>
+            <Image
+              style={{
+                width: logoSize,
+                height: logoSize,
+              }}
+              source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
+            />
+            <Text style={styles.title} children="OUTPOST" />
+          </View>
+          <CommunityList />
+          <View style={styles.safeAreaView}/>
+        </ScrollView>
+        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+          <SafeAreaView />
+          <Login style={styles.login} />
         </View>
-        <CommunityList />
-        <View style={styles.safeAreaView}/>
-      </ScrollView>
-    </Outpost>
+      </Outpost>
+    </WalletConnect>
   );
 }
 
@@ -61,6 +68,7 @@ const styles = StyleSheet.create({
     width: 128,
   },
   loading: {},
+  login: { padding: 15, flexDirection: "row", justifyContent: "flex-end" },
   logoContainer: {
     alignItems: "center",
     justifyContent: "center",
