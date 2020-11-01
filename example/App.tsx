@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Image, SafeAreaView } from 'react-native';
 import { useWindowDimensions } from "react-native-use-dimensions";
-import WalletConnect from "react-native-walletconnect";
+import { withWalletConnect, useWalletConnect } from "react-native-walletconnect";
 
 import Outpost, { useAllCommunities } from "./lib";
 import { Login, CommunityCard } from "./components";
@@ -25,33 +25,41 @@ function CommunityList() {
   )
 }
 
-export default function App() {
+function App() {
+  const { session, signPersonalMessage } = useWalletConnect();
   const { width } = useWindowDimensions();
   const logoSize = width * 0.6;
+  const onRequestSignMessage = useCallback(async (address: string, signInToken: string) => {
+    if (!session.length) {
+      return Promise.reject(new Error(`Unable to sign message; wallet not initialized`));
+    }
+    return signPersonalMessage([
+      signInToken,
+      address,
+    ]);
+  }, [session, signPersonalMessage]);
   return (
-    <WalletConnect>
-      <Outpost>
-        <ScrollView style={StyleSheet.absoluteFill}>
-          <View style={styles.safeAreaView} />
-          <View style={styles.logoContainer}>
-            <Image
-              style={{
-                width: logoSize,
-                height: logoSize,
-              }}
-              source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
-            />
-            <Text style={styles.title} children="OUTPOST" />
-          </View>
-          <CommunityList />
-          <View style={styles.safeAreaView}/>
-        </ScrollView>
-        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-          <SafeAreaView />
-          <Login style={styles.login} />
+    <Outpost onRequestSignMessage={onRequestSignMessage}>
+      <ScrollView style={StyleSheet.absoluteFill}>
+        <View style={styles.safeAreaView} />
+        <View style={styles.logoContainer}>
+          <Image
+            style={{
+              width: logoSize,
+              height: logoSize,
+            }}
+            source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
+          />
+          <Text style={styles.title} children="OUTPOST" />
         </View>
-      </Outpost>
-    </WalletConnect>
+        <CommunityList />
+        <View style={styles.safeAreaView}/>
+      </ScrollView>
+      <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+        <SafeAreaView />
+        <Login style={styles.login} />
+      </View>
+    </Outpost>
   );
 }
 
@@ -81,3 +89,5 @@ const styles = StyleSheet.create({
   safeAreaView: { height: 50 },
   title: { fontSize: 50, marginBottom: 50 },
 });
+
+export default withWalletConnect(App);

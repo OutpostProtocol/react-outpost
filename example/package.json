@@ -10,7 +10,7 @@
     "react-native-paper": "^4.3.0",
     "react-native-screens": "~2.10.1",
     "react-native-use-dimensions": "^1.3.4",
-    "react-native-walletconnect": "^0.0.1-alpha.1",
+    "react-native-walletconnect": "^0.0.1-alpha.2",
     "react-native-web": "0.13.13",
     "react-native-webview": "10.7.0"
   },

@@ -16,30 +16,21 @@ const styles = StyleSheet.create({
 function Login({ style }: LoginProps): JSX.Element {
   const { createSession, session, killSession, signPersonalMessage } = useWalletConnect();
   const hasWallet = !!session.length;
-  const { getSignInToken, getAuthToken } = useOutpost();
+  const { requestAuthToken } = useOutpost();
   const onTitlePress = useCallback(async () => {
     if (hasWallet) {
       killSession();
     }
     return createSession();
-  }, [hasWallet, createSession, killSession, getSignInToken]);
+  }, [hasWallet, createSession, killSession]);
   useEffect(() => {
     if (hasWallet) {
       (async () => {
         const [{ accounts: [address] }] = session.filter(({ chainId }) => chainId === 1);
-        const signInToken = await getSignInToken({ address });
-        const signature = await signPersonalMessage([
-          signInToken,
-          address,
-        ]);
-        const authToken = await getAuthToken({
-          address,
-          signature,
-        });
-        console.warn({ authToken });
+        const authToken = await requestAuthToken(address);
       })();
     }
-  }, [hasWallet, signPersonalMessage, getSignInToken, getAuthToken]);
+  }, [hasWallet, signPersonalMessage, requestAuthToken]);
   return (
     <View style={style}>
       <Title

@@ -1,22 +1,22 @@
 import React, { useEffect, useCallback, useState } from "react";
 import PropTypes from "prop-types";
-import deepmerge from "deepmerge";
 import { createClient } from "outpost-sdk";
 
 import { OutpostContext, defaultContext } from "../contexts";
-import type { OutpostContextValue } from "../contexts";
-import { useOutpost } from "../hooks";
+import type { OutpostContextValue, MessageSignRequest } from "../contexts";
 
 type Children = JSX.Element | JSX.Element[];
 
 export type OutpostProviderProps = {
-  baseURL: string;
-  children: Children;
+  readonly baseURL: string;
+  readonly onRequestSignMessage: MessageSignRequest;
+  readonly children: Children;
 };
 
 function OutpostProvider({
   baseURL,
   children,
+  onRequestSignMessage,
 }: OutpostProviderProps): JSX.Element {
   const shouldCreateClient = useCallback(((baseURL: string) => {
     return createClient({ baseURL });
@@ -25,9 +25,22 @@ function OutpostProvider({
   useEffect(() => {
     setOutpost(shouldCreateClient(baseURL));
   }, [baseURL, shouldCreateClient, setOutpost]);
+  const { getSignInToken, getAuthToken } = outpost;
+  const requestAuthToken = useCallback(
+    async (address: string): Promise<string> => {
+      const signInToken = await getSignInToken({ address });
+      const signature = await onRequestSignMessage(address, signInToken);
+      const authToken = await getAuthToken({
+        address,
+        signature,
+      });
+      return authToken;
+    },
+    [getSignInToken, getAuthToken, onRequestSignMessage]
+  );
   return (
     <OutpostContext.Provider
-      value={{ ...outpost, baseURL } as OutpostContextValue}
+      value={{ ...outpost, baseURL, requestAuthToken } as OutpostContextValue}
     >
       {children}
     </OutpostContext.Provider>
@@ -36,10 +49,12 @@ function OutpostProvider({
 
 OutpostProvider.propTypes = {
   baseURL: PropTypes.string,
+  onRequestSignMessage: PropTypes.func,
 };
 
 OutpostProvider.defaultProps = {
   baseURL: defaultContext.baseURL,
+  onRequestSignMessage: defaultContext.requestAuthToken,
 };
 
 export default OutpostProvider;
