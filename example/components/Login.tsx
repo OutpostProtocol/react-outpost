@@ -7,13 +7,14 @@ import { useOutpost } from "../lib";
 
 export type LoginProps = {
   style: ViewStyle;
+  onAuthTokenChanged: (authToken: string | null) => void;
 };
 
 const styles = StyleSheet.create({
   
 });
 
-function Login({ style }: LoginProps): JSX.Element {
+function Login({ style, onAuthTokenChanged }: LoginProps): JSX.Element {
   const { createSession, session, killSession, signPersonalMessage } = useWalletConnect();
   const hasWallet = !!session.length;
   const { requestAuthToken } = useOutpost();
@@ -28,16 +29,19 @@ function Login({ style }: LoginProps): JSX.Element {
       (async () => {
         const [{ accounts: [address] }] = session.filter(({ chainId }) => chainId === 1);
         const authToken = await requestAuthToken(address);
+        onAuthTokenChanged(authToken);
       })();
     }
-  }, [hasWallet, signPersonalMessage, requestAuthToken]);
+  }, [hasWallet, signPersonalMessage, requestAuthToken, onAuthTokenChanged]);
   return (
-    <View style={style}>
-      <Title
-        children={hasWallet ? 'Logout' : 'Login'}
-        onPress={onTitlePress}
-      />
-    </View>
+    <>
+      <View style={style}>
+        <Title
+          children={hasWallet ? 'Logout' : 'Login'}
+          onPress={onTitlePress}
+        />
+      </View>
+    </>
   );
 }
 

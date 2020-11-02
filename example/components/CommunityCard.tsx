@@ -1,20 +1,26 @@
 import React, { useState } from "react";
-import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
+import { Button, Card } from "react-native-paper";
 import { Community } from "outpost-sdk/build/main/lib/requests/getPosts";
 import Collapsible from "react-native-collapsible";
-import { useWalletConnect } from "react-native-walletconnect";
 import { useTokenBalance } from "react-use-etherscan";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
-import { useTxIdToUri, usePosts } from "../lib";
+import { useTxIdToUri, usePosts, useOutpost } from "../lib";
 import { useCurrentAddress } from "../hooks";
+import PostModal from "./PostModal";
 
 export type CommunityCardProps = {
   readonly community: Community;
+  readonly authToken: string | null;
 };
 
-function CommunityCard({ community, ...extraProps }) {
+function CommunityCard({ community, authToken, ...extraProps }) {
+  const [postModalState, setPostModalState] = useState({
+    visible: false,
+    post: null,
+  });
+  const { getPost } = useOutpost();
   const { getCurrentAddress } = useCurrentAddress();
   const {
     slug,
@@ -57,7 +63,7 @@ function CommunityCard({ community, ...extraProps }) {
         </Card.Actions>
       </Card>
       <Collapsible collapsed={collapsed}>
-        {posts.map(({ title, subtitle, readRequirement, ...extras }, i) => {
+        {posts.map(({ title, subtitle, readRequirement, txId, ...extras }, i) => {
           const canReadDocument = readRequirement <= usersTokenBalance;
           const conditionalProps = !canReadDocument ? {
             leftStyle: {
@@ -74,6 +80,10 @@ function CommunityCard({ community, ...extraProps }) {
           // So we need some kind of abstract canRead.
           return (
             <TouchableOpacity
+              onPress={async () => {
+                const { post } = await getPost({ txId, authToken });
+                setPostModalState({ post, visible: true });
+              }}
               disabled={!canReadDocument}
               key={i}
             >
@@ -88,6 +98,7 @@ function CommunityCard({ community, ...extraProps }) {
           );
         })}
       </Collapsible>
+      <PostModal {...postModalState} onRequestDismiss={() => setPostModalState(e => ({ ...e, visible: false }))}/>
     </>
   );
 }

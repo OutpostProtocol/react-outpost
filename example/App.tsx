@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Image, SafeAreaView } from 'react-native';
 import { useWindowDimensions } from "react-native-use-dimensions";
 import { withWalletConnect, useWalletConnect } from "react-native-walletconnect";
@@ -8,7 +8,7 @@ import Constants from "expo-constants";
 import Outpost, { useAllCommunities } from "./lib";
 import { Login, CommunityCard } from "./components";
 
-function CommunityList() {
+function CommunityList({ authToken }: { authToken: string  | null }) {
   const { loading, error, communities } = useAllCommunities();
   if (error) {
     return <Text style={styles.error} children={error.message} />
@@ -21,6 +21,7 @@ function CommunityList() {
         <CommunityCard
           key={i}
           community={community}
+          authToken={authToken}
         />
       ))}
     </>
@@ -30,6 +31,7 @@ function CommunityList() {
 const { ETHERSCAN_API_KEY } = Constants.manifest.extra;
 
 function App() {
+  const [authToken, onAuthTokenChanged] = useState<string | null>(null);
   const { session, signPersonalMessage } = useWalletConnect();
   const { width } = useWindowDimensions();
   const logoSize = width * 0.6;
@@ -60,12 +62,12 @@ function App() {
             />
             <Text style={styles.title} children="OUTPOST" />
           </View>
-          <CommunityList />
+          <CommunityList authToken={authToken} />
           <View style={styles.safeAreaView}/>
         </ScrollView>
         <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
           <SafeAreaView />
-          <Login style={styles.login} />
+          <Login style={styles.login} onAuthTokenChanged={onAuthTokenChanged} />
         </View>
       </Outpost>
     </Etherscan>
