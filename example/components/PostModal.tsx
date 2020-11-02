@@ -10,6 +10,7 @@ import {
  } from "react-native";
 import { useScreenDimensions } from "react-native-use-dimensions";
 import HTML from "react-native-render-html";
+import { Title } from "react-native-paper";
 import { WebView } from "react-native-webview-modal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Post } from "outpost-sdk/build/main/lib/requests/getPosts";
@@ -21,9 +22,15 @@ export type PostModalProps = {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  safeAreaView: { height: 50 },
   backButton: { marginLeft: 10 },
+  container: { flex: 1 },
+  headingContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    width: "100%",
+  },
+  safeAreaView: { height: 50 },
+  title: { color: "white", fontSize: 11 },
 });
 
 export default function PostModal({
@@ -50,14 +57,19 @@ export default function PostModal({
       </ScrollView>
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <SafeAreaView />
-        <TouchableOpacity onPress={onRequestDismiss}>
-          <MaterialCommunityIcons
-            style={styles.backButton}
-            color="white"
-            name="arrow-left"
-            size={30}
-          />
-        </TouchableOpacity>
+        <View style={styles.headingContainer}>
+          <TouchableOpacity onPress={onRequestDismiss}>
+            <MaterialCommunityIcons
+              style={styles.backButton}
+              color="white"
+              name="arrow-left"
+              size={30}
+            />
+            {!!post && (
+              <Title color="white" children={post.title} />
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );
