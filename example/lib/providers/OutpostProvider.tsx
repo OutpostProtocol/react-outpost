@@ -28,7 +28,6 @@ function OutpostProvider({
   const { getSignInToken, getAuthToken } = outpost;
   const requestAuthToken = useCallback(
     async (address: string): Promise<string> => {
-      console.warn({ address });
       const signInToken = await getSignInToken({ address });
       const signature = await onRequestSignMessage(address, signInToken);
       const authToken = await getAuthToken({
