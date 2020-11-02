@@ -13,7 +13,7 @@
     "react-native-walletconnect": "^0.0.1-alpha.2",
     "react-native-web": "0.13.13",
     "react-native-webview": "10.7.0",
-    "react-use-etherscan": "^0.1.0-alpha.3"
+    "react-use-etherscan": "^0.1.0-alpha.4"
   },
   "devDependencies": {
     "@babel/core": "7.9.0",

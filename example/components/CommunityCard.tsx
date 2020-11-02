@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import { Avatar, Button, Card, Title, Paragraph } from "react-native-paper";
 import { Community } from "outpost-sdk/build/main/lib/requests/getPosts";
 import Collapsible from "react-native-collapsible";
+import { useWalletConnect } from "react-native-walletconnect";
+import { useTokenBalance } from "react-use-etherscan";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 
 import { useTxIdToUri, usePosts } from "../lib";
+import { useCurrentAddress } from "../hooks";
 
 export type CommunityCardProps = {
   readonly community: Community;
 };
 
 function CommunityCard({ community, ...extraProps }) {
+  const { getCurrentAddress } = useCurrentAddress();
   const {
     slug,
     name,
@@ -23,6 +29,16 @@ function CommunityCard({ community, ...extraProps }) {
   const { txIdToUri } = useTxIdToUri();
   const { posts } = usePosts({ slug });
   const [collapsed, setCollapsed] = useState(true);
+
+  const address = getCurrentAddress();
+  const { result } = useTokenBalance({
+    address,
+    tokenName: "",
+    contractAddress: tokenAddress,
+  });
+
+  const usersTokenBalance = result ? parseInt(result) : 0;
+
   return (
     <>
       <Card {...extraProps}>
@@ -42,14 +58,33 @@ function CommunityCard({ community, ...extraProps }) {
       </Card>
       <Collapsible collapsed={collapsed}>
         {posts.map(({ title, subtitle, readRequirement, ...extras }, i) => {
+          const canReadDocument = readRequirement <= usersTokenBalance;
+          const conditionalProps = !canReadDocument ? {
+            leftStyle: {
+              width: 20,
+            },
+            left: () => (
+              <MaterialCommunityIcons
+                size={20}
+                color="black"
+                name="lock"
+              />
+            ),
+          } : {};
           // So we need some kind of abstract canRead.
           return (
-            <Card key={i}>
-              <Card.Title
-                title={title}
-                subtitle={subtitle}
-              />
-            </Card>
+            <TouchableOpacity
+              disabled={!canReadDocument}
+              key={i}
+            >
+              <Card>
+                <Card.Title
+                  {...conditionalProps}
+                  title={title}
+                  subtitle={subtitle}
+                />
+              </Card>
+            </TouchableOpacity>
           );
         })}
       </Collapsible>

@@ -2,6 +2,8 @@ import React, { useCallback } from 'react';
 import { StyleSheet, Text, View, ScrollView, ActivityIndicator, Image, SafeAreaView } from 'react-native';
 import { useWindowDimensions } from "react-native-use-dimensions";
 import { withWalletConnect, useWalletConnect } from "react-native-walletconnect";
+import Etherscan from "react-use-etherscan";
+import Constants from "expo-constants";
 
 import Outpost, { useAllCommunities } from "./lib";
 import { Login, CommunityCard } from "./components";
@@ -25,6 +27,8 @@ function CommunityList() {
   )
 }
 
+const { ETHERSCAN_API_KEY } = Constants.manifest.extra;
+
 function App() {
   const { session, signPersonalMessage } = useWalletConnect();
   const { width } = useWindowDimensions();
@@ -39,27 +43,32 @@ function App() {
     ]);
   }, [session, signPersonalMessage]);
   return (
-    <Outpost onRequestSignMessage={onRequestSignMessage}>
-      <ScrollView style={StyleSheet.absoluteFill}>
-        <View style={styles.safeAreaView} />
-        <View style={styles.logoContainer}>
-          <Image
-            style={{
-              width: logoSize,
-              height: logoSize,
-            }}
-            source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
-          />
-          <Text style={styles.title} children="OUTPOST" />
+    <Etherscan
+      apiKey={ETHERSCAN_API_KEY}
+      network="mainnet"
+    >
+      <Outpost onRequestSignMessage={onRequestSignMessage}>
+        <ScrollView style={StyleSheet.absoluteFill}>
+          <View style={styles.safeAreaView} />
+          <View style={styles.logoContainer}>
+            <Image
+              style={{
+                width: logoSize,
+                height: logoSize,
+              }}
+              source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
+            />
+            <Text style={styles.title} children="OUTPOST" />
+          </View>
+          <CommunityList />
+          <View style={styles.safeAreaView}/>
+        </ScrollView>
+        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+          <SafeAreaView />
+          <Login style={styles.login} />
         </View>
-        <CommunityList />
-        <View style={styles.safeAreaView}/>
-      </ScrollView>
-      <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-        <SafeAreaView />
-        <Login style={styles.login} />
-      </View>
-    </Outpost>
+      </Outpost>
+    </Etherscan>
   );
 }
 

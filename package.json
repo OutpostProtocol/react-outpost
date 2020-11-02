@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@expo/vector-icons": "^10.2.1",
+    "expo-constants": "^9.2.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
