@@ -4,9 +4,10 @@ import { useWindowDimensions } from "react-native-use-dimensions";
 import { withWalletConnect, useWalletConnect } from "react-native-walletconnect";
 import Etherscan from "react-use-etherscan";
 import Constants from "expo-constants";
+import Pyongyang from "pyongyang";
 
 import Outpost, { useAllCommunities } from "./lib";
-import { Login, CommunityCard } from "./components";
+import { Login, CommunityCard, UploadImage } from "./components";
 
 function CommunityList({ authToken }: { authToken: string  | null }) {
   const { loading, error, communities } = useAllCommunities();
@@ -45,32 +46,35 @@ function App() {
     ]);
   }, [session, signPersonalMessage]);
   return (
-    <Etherscan
-      apiKey={ETHERSCAN_API_KEY}
-      network="mainnet"
-    >
-      <Outpost onRequestSignMessage={onRequestSignMessage}>
-        <ScrollView style={StyleSheet.absoluteFill}>
-          <View style={styles.safeAreaView} />
-          <View style={styles.logoContainer}>
-            <Image
-              style={{
-                width: logoSize,
-                height: logoSize,
-              }}
-              source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
-            />
-            <Text style={styles.title} children="OUTPOST" />
+    <Pyongyang>
+      <Etherscan
+        apiKey={ETHERSCAN_API_KEY}
+        network="mainnet"
+      >
+        <Outpost onRequestSignMessage={onRequestSignMessage}>
+          <ScrollView style={StyleSheet.absoluteFill}>
+            <View style={styles.safeAreaView} />
+            <View style={styles.logoContainer}>
+              <Image
+                style={{
+                  width: logoSize,
+                  height: logoSize,
+                }}
+                source={{ uri: "https://outpost-protocol.com/logo/Outpost_black.png"}}
+              />
+              <Text style={styles.title} children="OUTPOST" />
+            </View>
+            <UploadImage authToken={authToken} />
+            <CommunityList authToken={authToken} />
+            <View style={styles.safeAreaView}/>
+          </ScrollView>
+          <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+            <SafeAreaView />
+            <Login style={styles.login} onAuthTokenChanged={onAuthTokenChanged} />
           </View>
-          <CommunityList authToken={authToken} />
-          <View style={styles.safeAreaView}/>
-        </ScrollView>
-        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-          <SafeAreaView />
-          <Login style={styles.login} onAuthTokenChanged={onAuthTokenChanged} />
-        </View>
-      </Outpost>
-    </Etherscan>
+        </Outpost>
+      </Etherscan>
+    </Pyongyang>
   );
 }
 
