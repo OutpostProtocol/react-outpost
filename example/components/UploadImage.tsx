@@ -57,14 +57,15 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
           "Missing permissions.",
         );
       }
-      const { base64, cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
+      const { base64, cancelled, uri } = (await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
         base64: true,
         exif: false,
-      });
+      }) as { base64: string; cancelled: boolean; uri: string; });
+
       if (cancelled) {
         throw new Error(
           "User cancelled selection.",

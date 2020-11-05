@@ -65,7 +65,9 @@ export default function useTransactionStatus(params: useTransactionStatusParams)
           error: null,
           transactionStatus,
         });
+
         !loading && clearInterval(i);
+
       } catch (e) {
         clearInterval(i);
         setState((error) => ({

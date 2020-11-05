@@ -13,7 +13,9 @@ export type usePostsResult = {
   readonly error: null | Error;
 };
 
-export default function usePosts({ slug }: usePostsParams): usePostsResult {
+export default function usePosts({
+  slug,
+}: usePostsParams): usePostsResult {
   const [state, setState] = useState<usePostsResult>({ loading: false, error: null, posts: [] });
   const { getPosts } = useOutpost();
   useEffect(() => {
