@@ -58,7 +58,7 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
           "Missing permissions.",
         );
       }
-      const { base64, cancelled } = await ImagePicker.launchImageLibraryAsync({
+      const { base64, cancelled, uri } = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
@@ -76,13 +76,18 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
         );
       }
 
-      const txId = await uploadImage({
-        authToken,
-        // TODO: How dynamics?
-        base64: `data:image/png;base64,${base64}`,
-      });
+      const supportedImageTypes = [".png", ".jpg", ".jpeg"];
+      const ext = uri.substring(uri.lastIndexOf(".")).toLowerCase();
 
-      setTxId(txId);
+      if (supportedImageTypes.indexOf(ext) <= 0) {
+        throw new Error(
+          `${ext} is not a supported type. Please select one of the following: ${supportedImageTypes.join(",")}.`,
+        );
+      }
+
+      setTxId(
+        await uploadImage({ authToken, base64: `data:image/${ext.substring(1)};base64,${base64}` })
+      );
     }
   }, [uploadImage, authToken, setTxId, txIdToUri]);
 

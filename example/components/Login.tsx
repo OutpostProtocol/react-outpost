@@ -29,7 +29,6 @@ function Login({ style, onAuthTokenChanged }: LoginProps): JSX.Element {
       (async () => {
         const [{ accounts: [address] }] = session.filter(({ chainId }) => chainId === 1);
         const authToken = await requestAuthToken(address);
-        console.warn({ authToken });
         onAuthTokenChanged(authToken);
       })();
     }
