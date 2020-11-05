@@ -25,10 +25,10 @@ function OutpostProvider({
   useEffect(() => {
     setOutpost(shouldCreateClient(baseURL));
   }, [baseURL, shouldCreateClient, setOutpost]);
-  const { getSignInToken, getAuthToken } = outpost;
+  const { getChallenge, getAuthToken } = outpost;
   const requestAuthToken = useCallback(
     async (address: string): Promise<string> => {
-      const signInToken = await getSignInToken({ address });
+      const signInToken = await getChallenge({ address });
       const signature = await onRequestSignMessage(address, signInToken);
       const authToken = await getAuthToken({
         address,
@@ -36,7 +36,7 @@ function OutpostProvider({
       });
       return authToken;
     },
-    [getSignInToken, getAuthToken, onRequestSignMessage]
+    [getChallenge, getAuthToken, onRequestSignMessage]
   );
   return (
     <OutpostContext.Provider

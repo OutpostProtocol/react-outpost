@@ -4639,10 +4639,10 @@ os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
 
-outpost-sdk@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/outpost-sdk/-/outpost-sdk-1.0.0.tgz#d46610547cd13d60c40c158efdf7073a08f9424e"
-  integrity sha512-TqJqxfyd8BtFolgJfYZV7TOQ0P9i4nndkKAWYubE0QSKL6U/ZkVL2RDe8ycDhvjlf+Tq7asRdWq5Eyj2JWKmYg==
+outpost-sdk@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/outpost-sdk/-/outpost-sdk-1.0.2.tgz#17aa95a5ce90873917c50046d6777961c646d8d9"
+  integrity sha512-GraW7t6sA54CjXyS4j+Ac8o7/iExvBoQmcviphCsxC5IWmwKUA12FEQiR6Lw7BiwHknUS9flFVJQ+TuxGtQu/w==
   dependencies:
     "@types/axios" "^0.14.0"
     "@types/graphql" "^14.5.0"

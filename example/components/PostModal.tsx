@@ -22,7 +22,7 @@ export type PostModalProps = {
 };
 
 const styles = StyleSheet.create({
-  backButton: { marginLeft: 10 },
+  backButton: { marginHorizontal: 10 },
   container: { flex: 1 },
   headingContainer: {
     alignItems: "center",
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   safeAreaView: { height: 50 },
-  title: { color: "white", fontSize: 11 },
+  title: { color: "white", fontSize: 16 },
 });
 
 export default function PostModal({
@@ -39,7 +39,6 @@ export default function PostModal({
   post,
  }: PostModalProps): JSX.Element {
    const { width } = useScreenDimensions();
-   console.warn({ post });
   return (
     <Modal
       visible={visible}
@@ -57,8 +56,7 @@ export default function PostModal({
       </ScrollView>
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         <SafeAreaView />
-        <View style={styles.headingContainer}>
-          <TouchableOpacity onPress={onRequestDismiss}>
+          <TouchableOpacity onPress={onRequestDismiss} style={styles.headingContainer}>
             <MaterialCommunityIcons
               style={styles.backButton}
               color="white"
@@ -66,10 +64,9 @@ export default function PostModal({
               size={30}
             />
             {!!post && (
-              <Title color="white" children={post.title} />
+              <Title style={styles.title} children={post.title} />
             )}
           </TouchableOpacity>
-        </View>
       </View>
     </Modal>
   );
