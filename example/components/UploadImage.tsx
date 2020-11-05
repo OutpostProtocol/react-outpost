@@ -26,7 +26,6 @@ export type UploadImageProps = {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    backgroundColor: "green",
     height: 200,
     justifyContent: "center",
     width: "100%",
@@ -84,12 +83,17 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
           `${ext} is not a supported type. Please select one of the following: ${supportedImageTypes.join(",")}.`,
         );
       }
-
       setTxId(
-        await uploadImage({ authToken, base64: `data:image/${ext.substring(1)};base64,${base64}` })
+        await uploadImage({
+          authToken,
+          base64: `data:image/${ext.substring(1)};base64,${base64}`
+        })
       );
     }
   }, [uploadImage, authToken, setTxId, txIdToUri]);
+
+
+  console.log({ loading, error, transactionStatus });
 
   if (!txId) {
     return (
