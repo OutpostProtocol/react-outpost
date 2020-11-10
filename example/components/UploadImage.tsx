@@ -18,6 +18,7 @@ import {
   useTransactionStatus,
   TransactionStatus,
 } from "../lib";
+import { uploadImageResult } from "outpost-sdk/build/main/lib/requests";
 
 export type UploadImageProps = {
   authToken: string | null;
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
 });
 
 function UploadImage({ authToken }: UploadImageProps): JSX.Element {
-  const [txId, setTxId] = useState(null);
+  const [uploadImageResult, setUploadImageResult] = useState<uploadImageResult | null>(null);
   const { futures: { getTransactionStatus } } = pyongyang(`
     const arweave = Arweave.init();
     return {
@@ -43,10 +44,12 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
   const { uploadImage } = useOutpost();
   const { txIdToUri } = useTxIdToUri();
 
+  // XXX: Use this to interrogate arweave transaction handling.
+  //      (Outpost returns results optimistically.)
   const { error, transactionStatus, loading } = useTransactionStatus({
     getTransactionStatus,
     interval: 10000,
-    txId,
+    txId: uploadImageResult?.txId,
   });
 
   const pickImage = useCallback(async () => {
@@ -84,19 +87,16 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
           `${ext} is not a supported type. Please select one of the following: ${supportedImageTypes.join(",")}.`,
         );
       }
-      setTxId(
+      setUploadImageResult(
         await uploadImage({
           authToken,
           base64: `data:image/${ext.substring(1)};base64,${base64}`
         })
       );
     }
-  }, [uploadImage, authToken, setTxId, txIdToUri]);
+  }, [uploadImage, authToken, setUploadImageResult, txIdToUri]);
 
-
-  console.log({ loading, error, transactionStatus });
-
-  if (!txId) {
+  if (!uploadImageResult) {
     return (
       <TouchableOpacity onPress={pickImage}>
         <Image
@@ -107,17 +107,11 @@ function UploadImage({ authToken }: UploadImageProps): JSX.Element {
         />
       </TouchableOpacity>
     );
-  } else if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator />
-      </View>
-    );
   }
   return (
     <Image
       style={styles.container}
-      source={{ uri: txIdToUri(txId) }}
+      source={{ uri: txIdToUri(uploadImageResult.gateway, uploadImageResult.txId) }}
     />
   );
 }

@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 
 export type useTxIdToUriResult = {
-  readonly txIdToUri: (txId: string) => string;
+  readonly txIdToUri: (gateway: string, txId: string) => string;
 };
 
 export default function useTxIdToUri(): useTxIdToUriResult {
   const txIdToUri = useCallback(
-    (txId: string) => `https://arweave.net/${txId}`,
+    (gateway: string, txId: string) => `https://${gateway}/${txId}`,
     []
   );
   return { txIdToUri };
