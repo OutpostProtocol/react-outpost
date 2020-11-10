@@ -7,14 +7,20 @@ Supports [**Android**](https://reactnative.dev/), [**iOS**](https://reactnative.
 
 If you'd like more information about Outpost, or to host your own community, please drop into the [**Outpost Discord**](https://discord.gg/GZzSddx)!
 
-## Getting Started
+## 🚀 Getting Started
 Using [**Yarn**](https://yarnpkg.com):
 
 ```sh
 yarn add react-outpost
 ```
 
-## Tutorial
+Using [**npm**](https://npmjs.com):
+
+```sh
+npm i -s react-outpost
+```
+
+## ✏️ Tutorial
 
 To interface with [**Outpost**](https://outpost-protocol.com), you must declare an [`<OutpostProvider/>`](./src/providers/OutpostProvider.tsx) at the root of your application, which expects a single function [**prop**](https://reactjs.org/docs/components-and-props.html), `onRequestSignMessage`, which is used to safely validate the user's social token ownership. In this callback, you can use a variety of ways to sign a message, for example [**Ethers**](https://github.com/ethers-io/ethers.js/) or [**WalletConnect**](https://walletconnect.org).
 
@@ -70,7 +76,7 @@ await uploadImage({
 
 You can check out the complete example application using [**WalletConnect**](https://walletconnect.org) as a message signer in React Native [here](./example).
 
-## API
+## 🦄 API
 
 ### `OutpostProvider`
 
@@ -173,5 +179,5 @@ export type useTxIdToUriResult = {
 };
 ```
 
-## License
+## ✌️ License
 [**MIT**](./LICENSE)
