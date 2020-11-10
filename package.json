@@ -1,6 +1,6 @@
 {
   "name": "react-outpost",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "⚛️ 📨 The React client SDK for Outpost. (Android/iOS/Web/Expo)",
   "main": "dist",
   "repository": "https://github.com/OutpostProtocol/react-outpost",
