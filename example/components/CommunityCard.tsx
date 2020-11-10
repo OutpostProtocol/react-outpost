@@ -5,8 +5,8 @@ import Collapsible from "react-native-collapsible";
 import { useTokenBalance } from "react-use-etherscan";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import { useTxIdToUri, usePosts, useOutpost } from "react-outpost";
 
-import { useTxIdToUri, usePosts, useOutpost } from "../lib";
 import { useCurrentAddress } from "../hooks";
 import PostModal from "./PostModal";
 

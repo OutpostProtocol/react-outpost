@@ -5,8 +5,8 @@ import { withWalletConnect, useWalletConnect } from "react-native-walletconnect"
 import Etherscan from "react-use-etherscan";
 import Constants from "expo-constants";
 import Pyongyang from "pyongyang";
+import Outpost, { useAllCommunities } from "react-outpost";
 
-import Outpost, { useAllCommunities } from "./lib";
 import { Login, CommunityCard, UploadImage } from "./components";
 
 function CommunityList({ authToken }: { authToken: string  | null }) {

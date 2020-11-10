@@ -11,13 +11,13 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { pyongyang } from "pyongyang";
-
 import {
   useOutpost,
   useTxIdToUri,
   useTransactionStatus,
   TransactionStatus,
-} from "../lib";
+} from "react-outpost";
+
 import { uploadImageResult } from "outpost-sdk/build/main/lib/requests";
 
 export type UploadImageProps = {

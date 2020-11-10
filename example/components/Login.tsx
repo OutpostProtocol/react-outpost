@@ -2,8 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { View, StyleSheet, ViewStyle } from "react-native";
 import { Title } from "react-native-paper";
 import { useWalletConnect } from "react-native-walletconnect";
-
-import { useOutpost } from "../lib";
+import { useOutpost } from "react-outpost";
 
 export type LoginProps = {
   style: ViewStyle;

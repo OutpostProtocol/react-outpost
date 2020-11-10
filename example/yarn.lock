@@ -5173,6 +5173,11 @@ react-native-webview@10.7.0:
     use-subscription "^1.0.0"
     whatwg-fetch "^3.0.0"
 
+react-outpost@../:
+  version "0.1.0-alpha.0"
+  dependencies:
+    outpost-sdk "^1.0.3"
+
 react-refresh@^0.4.0:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.4.3.tgz#966f1750c191672e76e16c2efa569150cc73ab53"
